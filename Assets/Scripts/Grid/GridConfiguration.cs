@@ -17,7 +17,7 @@ public class GridConfiguration : MonoBehaviour {
 		grid = new Dictionary<Vector2, GridCell>();
 
 		// Load the layout from file
-		TextAsset gridLayout = Resources.Load("layout2") as TextAsset;
+		TextAsset gridLayout = Resources.Load("layout_medium") as TextAsset;
 
 		// Split the layout string by newline and add each line to a list.
 		List<string> gridLines = new List<string>(gridLayout.text.Replace("\r", "").Split('\n'));
@@ -47,18 +47,18 @@ public class GridConfiguration : MonoBehaviour {
 
 	void Update () {
 		// Return if the grid is fully explored (as much as it can be)
-		if (explorer.exploreQueue.Count == 0) {
+		if (explorer.navPath.Count == 0) {
 			return;
 		}
 
 		// Get the Z value for the camera's target position
-		float targetZ = explorer.exploreQueue.Peek().y;
+		float targetZ = explorer.navPath.Peek().y;
 		// Construct the camera's target position
 		Vector3 destinationPosition = new Vector3(mainCamera.position.x, mainCamera.position.y, targetZ);
 
 		// Lerp kind of smoothly from the camera's current position to the target position.
 		// This will be optimized later.
-		mainCamera.position = Vector3.Lerp(mainCamera.position, destinationPosition, Time.deltaTime * 0.3f);
+		mainCamera.position = Vector3.Lerp(mainCamera.position, destinationPosition, Time.deltaTime * 0.5f);
 	}
 
 }
