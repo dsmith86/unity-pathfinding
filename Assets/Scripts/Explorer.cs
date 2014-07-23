@@ -5,8 +5,13 @@ using System.Collections.Generic;
 // Base class for all explorer algorithms in this repository.
 public class Explorer : MonoBehaviour {
 
+	// Finished Constructing Path event
+	public delegate void PathAction();
+	public static event PathAction PathFinishedConstructing;
+
 	public Dictionary<Vector2, GridCell> grid;
 	protected Vector2 sourceCell;
+	protected Vector2 targetCell;
 
 	// In order to navigate the grid in a logical fashion, obstacles must
 	// be removed from what can be considered the navigable portion of the grid.
@@ -42,5 +47,11 @@ public class Explorer : MonoBehaviour {
 			}
 		}
 		return matches;
+	}
+
+	protected void NotifyPathFinished () {
+		if (PathFinishedConstructing != null) {
+			PathFinishedConstructing();
+		}
 	}
 }

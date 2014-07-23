@@ -8,6 +8,10 @@ public class GridConfiguration : MonoBehaviour {
 	public Transform mainCamera;
 	// The plane to draw the cells on
 	public Transform referencePlane;
+	// Whether to exit early or not
+	public bool earlyExit;
+	// Whether or not to step manually through each navigation item
+	public bool stepNavigation;
 	// A grid of cells to navigate
 	private Dictionary<Vector2, GridCell> grid;
 	// A reference to the explorer class
@@ -17,7 +21,7 @@ public class GridConfiguration : MonoBehaviour {
 		grid = new Dictionary<Vector2, GridCell>();
 
 		// Load the layout from file
-		TextAsset gridLayout = Resources.Load("layout_medium") as TextAsset;
+		TextAsset gridLayout = Resources.Load("layout_small") as TextAsset;
 
 		// Split the layout string by newline and add each line to a list.
 		List<string> gridLines = new List<string>(gridLayout.text.Replace("\r", "").Split('\n'));
@@ -40,25 +44,21 @@ public class GridConfiguration : MonoBehaviour {
 		// Add the explorer as a component
 		explorer = gameObject.AddComponent("BreadthFirstExplorer") as BreadthFirstExplorer;
 		// When adding a component (necessary for the Coroutine for now), a custom Initialize method must be used.
-		explorer.Initialize(grid);
+		explorer.Initialize(grid, earlyExit, stepNavigation);
 		// Explore the grid.
 		explorer.Explore();
 	}
 
 	void Update () {
-		// Return if the grid is fully explored (as much as it can be)
-		if (explorer.navPath.Count == 0) {
+		if (!stepNavigation) {
 			return;
 		}
 
-		// Get the Z value for the camera's target position
-		float targetZ = explorer.navPath.Peek().y;
-		// Construct the camera's target position
-		Vector3 destinationPosition = new Vector3(mainCamera.position.x, mainCamera.position.y, targetZ);
-
-		// Lerp kind of smoothly from the camera's current position to the target position.
-		// This will be optimized later.
-		mainCamera.position = Vector3.Lerp(mainCamera.position, destinationPosition, Time.deltaTime * 0.5f);
+		// Step through the navigation sequence manually, if that flag is checked in the editor.
+		bool nextStep = Input.GetButtonUp("Jump");
+		if (nextStep && explorer.navPath.Count > 0) {
+			explorer.AdvanceExplorer();
+		}
 	}
 
 }
