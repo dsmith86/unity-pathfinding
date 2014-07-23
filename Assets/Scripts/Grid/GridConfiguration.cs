@@ -21,7 +21,7 @@ public class GridConfiguration : MonoBehaviour {
 		grid = new Dictionary<Vector2, GridCell>();
 
 		// Load the layout from file
-		TextAsset gridLayout = Resources.Load("layout_medium") as TextAsset;
+		TextAsset gridLayout = Resources.Load("layout_small") as TextAsset;
 
 		// Split the layout string by newline and add each line to a list.
 		List<string> gridLines = new List<string>(gridLayout.text.Replace("\r", "").Split('\n'));
