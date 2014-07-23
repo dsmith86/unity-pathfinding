@@ -28,7 +28,7 @@ public class GridCell {
 				cellType = "floor";
 				scale = new Vector3(1f, 0.01f, 1f);
 				break;
-			case '1':
+			case 'w':
 				cellType = "obstacle";
 				scale = new Vector3(1f, 1f, 1f);
 				break;

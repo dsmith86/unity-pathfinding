@@ -101,5 +101,6 @@ public class BreadthFirstExplorer : Explorer {
 	public void AdvanceExplorer () {
 			Vector2 currentCell = navPath.Pop();
 			navGrid[currentCell].cell.renderer.material.color = Color.green;
+			navGrid[currentCell].cell.renderer.material.mainTexture = null;
 	}
 }
