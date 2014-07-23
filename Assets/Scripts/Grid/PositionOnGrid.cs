@@ -4,18 +4,18 @@ using System.Collections;
 public static class PositionOnGrid {
 
 	// This method determines the position at which to place a block, relative to a plane. It accounts
-	// for the bounds of the plane, as well as the relative scale of the object being placed. Currently
+	// for the bounds of the plane, as well as the relative offset of the object being placed. Currently
 	// only works for standard Unity cubes, and other primitives that have the dimensions 1 unit, cubed.
-	public static Vector3 ForPlane(Transform referencePlane, Vector3 objectScale, Vector2 destination) {
+	public static Vector3 ForPlane(Transform referencePlane, Vector3 objectOffset, Vector2 destination) {
 		// The center of the plane
 		Vector3 planeOrigin = referencePlane.position;
 		// the relative width (X) and depth (Z) of the plane, based on the default unit scale of 10 units
 		float planeUnitWidth = referencePlane.lossyScale.x * 10;
 		float planeUnitDepth = referencePlane.lossyScale.z * 10;
 		// the relative dimensions of the object to place, based on the default unit scale of 1 unit
-		float objectUnitWidth = objectScale.x;
-		float objectUnitHeight = objectScale.y;
-		float objectUnitDepth = objectScale.z;
+		float objectUnitWidth = objectOffset.x;
+		float objectUnitHeight = objectOffset.y;
+		float objectUnitDepth = objectOffset.z;
 		
 		// For each of the 3 coordinates in coordinate space, starting at the plane's origin, unit length
 		// is subtracted, then have of the object's length in the respective axis. Then, assuming the

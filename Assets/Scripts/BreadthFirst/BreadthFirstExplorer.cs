@@ -100,7 +100,7 @@ public class BreadthFirstExplorer : Explorer {
 	// for each new cell, change the color to indicate a path for the visual aid.
 	public void AdvanceExplorer () {
 			Vector2 currentCell = navPath.Pop();
-			navGrid[currentCell].cell.renderer.material.color = Color.green;
+			navGrid[currentCell].cell.renderer.material.color = Color.white;
 			navGrid[currentCell].cell.renderer.material.mainTexture = null;
 	}
 }

@@ -18,10 +18,11 @@ public class GridCell {
 	public int height;
 
 	public GridCell(char gridItem, Vector2 cellPosition, Transform grid) {
-		Vector3 scale;
+		Vector3 offset;
 		Vector3 globalPosition;
 
 		this.cellPosition = cellPosition;
+		offset = new Vector3(1f, -1f, 1f);
 
 		// This is based on the preferred placement of objects on the grid.
 		// At the moment, spaces in the input file will simply place a floor tile.
@@ -29,38 +30,39 @@ public class GridCell {
 		// be a bit more customizable. (Octagon, anyone?)
 		if (Int32.TryParse(gridItem.ToString(), out height)) {
 			cellType = "floor";
-			scale = new Vector3(1f, 0.01f, 1f);
 		} else {
 			switch (gridItem) {
 				case 'w':
 					cellType = "obstacle";
-					scale = new Vector3(1f, 1f, 1f);
+					offset = new Vector3(1f, 1f, 1f);
 					break;
 				case 'x':
 					cellType = "target";
-					scale = new Vector3(1f, 1f, 1f);
+					offset = new Vector3(1f, 1f, 1f);
 					break;
 				case 'p':
 					cellType = "source";
-					scale = new Vector3(1f, 1f, 1f);
+					offset = new Vector3(1f, 1f, 1f);
 					break;
 				default:
 					cellType = "floor";
-					scale = new Vector3(1f, 0.01f, 1f);
 					break;
 			}
 		}
 		
-		// The global position is chosen relative to the plane on which the object will reside.
-		globalPosition = PositionOnGrid.ForPlane(grid, scale, cellPosition);
 
-		// Raise the floor tile based on its height
-		if (cellType == "floor") {
-			globalPosition.y += 0.2f * height;
-		}
+		// The global position is chosen relative to the plane on which the object will reside.
+		globalPosition = PositionOnGrid.ForPlane(grid, offset, cellPosition);
 
 		// Get the object from the Resources folder, using its cell type.
 		cell = ObjectFromResource("Prefabs/" + cellType, globalPosition);
+
+		// Raise the floor tile based on its height
+		if (cellType == "floor") {
+			cell.transform.localScale += new Vector3(0, height * 0.4f, 0);
+		} else {
+			cell.transform.localScale += new Vector3(0, 2f, 0);
+		}
 	}
 
 	GameObject ObjectFromResource(string resource, Vector3 position) {

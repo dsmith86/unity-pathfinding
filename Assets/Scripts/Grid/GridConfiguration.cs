@@ -6,8 +6,6 @@ public class GridConfiguration : MonoBehaviour {
 
 	// The camera that will follow the action
 	public Transform mainCamera;
-	// The plane to draw the cells on
-	public Transform referencePlane;
 	// Whether to exit early or not
 	public bool earlyExit;
 	// Whether or not to step manually through each navigation item
@@ -21,7 +19,7 @@ public class GridConfiguration : MonoBehaviour {
 		grid = new Dictionary<Vector2, GridCell>();
 
 		// Load the layout from file
-		TextAsset gridLayout = Resources.Load("layout_small") as TextAsset;
+		TextAsset gridLayout = Resources.Load("layout_medium") as TextAsset;
 
 		// Split the layout string by newline and add each line to a list.
 		List<string> gridLines = new List<string>(gridLayout.text.Replace("\r", "").Split('\n'));
