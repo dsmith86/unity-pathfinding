@@ -2,6 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// The different types of supported explorers
+	public enum ExplorerType {
+		BFS, Dijkstra
+	}
+
 public class GridConfiguration : MonoBehaviour {
 
 	// The camera that will follow the action
@@ -12,8 +17,10 @@ public class GridConfiguration : MonoBehaviour {
 	public bool stepNavigation;
 	// A grid of cells to navigate
 	private Dictionary<Vector2, GridCell> grid;
-	// A reference to the explorer class
-	private BreadthFirstExplorer explorer;
+	// The type of explorer selected in the editor
+	public ExplorerType explorerType;
+	// The list of classes
+	private Dictionary<ExplorerType, Explorer> explorers;
 
 	void Start () {
 		grid = new Dictionary<Vector2, GridCell>();
@@ -39,12 +46,26 @@ public class GridConfiguration : MonoBehaviour {
 			}
 		}
 
-		// Add the explorer as a component
-		explorer = gameObject.AddComponent("BreadthFirstExplorer") as BreadthFirstExplorer;
-		// When adding a component (necessary for the Coroutine for now), a custom Initialize method must be used.
-		explorer.Initialize(grid, earlyExit, stepNavigation);
+		// Initialize the explorers.
+		explorers = new Dictionary<ExplorerType, Explorer>() {
+			{ ExplorerType.BFS, new BreadthFirstExplorer(grid, earlyExit, stepNavigation) },
+			{ ExplorerType.Dijkstra, new DijkstraExplorer() }
+		};
+
 		// Explore the grid.
-		explorer.Explore();
+		explorers[explorerType].Explore();
+	}
+
+	void BeginTracingPath () {
+		StartCoroutine(TracePathToTarget());
+	}
+
+	IEnumerator TracePathToTarget () {
+		// Advance from the source cell until the target cell is reached
+		while (explorers[explorerType].navPath.Count > 0) {
+			explorers[explorerType].AdvanceExplorer();
+			yield return null;
+		}
 	}
 
 	void Update () {
@@ -54,9 +75,17 @@ public class GridConfiguration : MonoBehaviour {
 
 		// Step through the navigation sequence manually, if that flag is checked in the editor.
 		bool nextStep = Input.GetButtonUp("Jump");
-		if (nextStep && explorer.navPath.Count > 0) {
-			explorer.AdvanceExplorer();
+		if (nextStep && explorers[explorerType].navPath.Count > 0) {
+			explorers[explorerType].AdvanceExplorer();
 		}
+	}
+
+	void OnEnable () {
+		Explorer.PathShouldBeTraced += BeginTracingPath;
+	}
+
+	void OnDisable () {
+		Explorer.PathShouldBeTraced -= BeginTracingPath;
 	}
 
 }

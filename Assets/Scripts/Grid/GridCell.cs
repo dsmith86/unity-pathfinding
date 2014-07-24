@@ -22,6 +22,7 @@ public class GridCell {
 		Vector3 globalPosition;
 
 		this.cellPosition = cellPosition;
+		// The offset is the number of tiles by which the cell will be offset.
 		offset = new Vector3(1f, -1f, 1f);
 
 		// This is based on the preferred placement of objects on the grid.

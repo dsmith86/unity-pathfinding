@@ -3,15 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Base class for all explorer algorithms in this repository.
-public class Explorer : MonoBehaviour {
+public class Explorer {
 
-	// Finished Constructing Path event
-	public delegate void PathAction();
-	public static event PathAction PathFinishedConstructing;
+	// Path Action Delegate
+	public delegate void PathActionDelegate();
+	public static event PathActionDelegate PathFinishedConstructing;
+	public static event PathActionDelegate PathShouldBeTraced;
 
 	public Dictionary<Vector2, GridCell> grid;
 	protected Vector2 sourceCell;
 	protected Vector2 targetCell;
+
+	// The shortest path back from the target to the source.
+	public Stack<Vector2> navPath;
+
+	// Some virtual functions that the base clase should implement
+	public virtual void Explore () {}
+	public virtual void AdvanceExplorer () {}
 
 	// In order to navigate the grid in a logical fashion, obstacles must
 	// be removed from what can be considered the navigable portion of the grid.
@@ -49,9 +57,15 @@ public class Explorer : MonoBehaviour {
 		return matches;
 	}
 
-	protected void NotifyPathFinished () {
+	protected static void NotifyPathFinished () {
 		if (PathFinishedConstructing != null) {
 			PathFinishedConstructing();
+		}
+	}
+
+	protected static void NotifyPathShouldBeTraced () {
+		if (PathShouldBeTraced != null) {
+			PathShouldBeTraced();
 		}
 	}
 }

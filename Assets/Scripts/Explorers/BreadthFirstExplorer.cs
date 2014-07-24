@@ -9,8 +9,6 @@ public class BreadthFirstExplorer : Explorer {
 
 	// The queue used to navigate throughout the grid.
 	public Queue<Vector2> exploreQueue;
-	// The shortest path back from the target to the source.
-	public Stack<Vector2> navPath;
 	// A dictionary that tracks the order in which cells are visited.
 	private Dictionary<Vector2, Vector2> came_from;
 	// The navigable grid, which excludes obstacles.
@@ -20,7 +18,7 @@ public class BreadthFirstExplorer : Explorer {
 	// Whether or not to step manually through each navigation item
 	private bool stepNavigation;
 
-	public void Initialize (Dictionary<Vector2, GridCell> grid, bool earlyExit, bool stepNavigation) {
+	public BreadthFirstExplorer (Dictionary<Vector2, GridCell> grid, bool earlyExit, bool stepNavigation) {
 		this.grid = grid;
 		this.earlyExit = earlyExit;
 		this.stepNavigation = stepNavigation;
@@ -29,7 +27,7 @@ public class BreadthFirstExplorer : Explorer {
 		came_from = new Dictionary<Vector2, Vector2>();
 	}
 
-	public void Explore () {
+	public override void Explore () {
 		// Get a reference to the first source cell that can be found.
 		// This might change in the future, and multiple sources might be allowed.
 		sourceCell = grid.FirstOrDefault(cell => cell.Value.cellType == "source").Key;
@@ -47,10 +45,8 @@ public class BreadthFirstExplorer : Explorer {
 		ConstructPath(sourceCell);
 		// Send an event notification that the path has been constructed.
 		NotifyPathFinished();
-		// Start animating the path navigation if the stepNavigation flag is left unchecked
-		if (!stepNavigation) {
-			StartCoroutine(TracePathToTarget());	
-		}
+		// Send an event notification that the path can be traced.
+		NotifyPathShouldBeTraced();
 	}
 
 	void LookForTarget () {
@@ -88,17 +84,8 @@ public class BreadthFirstExplorer : Explorer {
 		}
 	}
 
-	IEnumerator TracePathToTarget () {
-
-		// Advance from the source cell until the target cell is reached
-		while (navPath.Count > 0) {
-			AdvanceExplorer();
-			yield return null;
-		}
-	}
-
 	// for each new cell, change the color to indicate a path for the visual aid.
-	public void AdvanceExplorer () {
+	public override void AdvanceExplorer () {
 			Vector2 currentCell = navPath.Pop();
 			navGrid[currentCell].cell.renderer.material.color = Color.white;
 			navGrid[currentCell].cell.renderer.material.mainTexture = null;
