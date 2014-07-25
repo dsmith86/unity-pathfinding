@@ -48,7 +48,7 @@ namespace DSM {
 
 				protected IComparer<T> Comparer;
 				// Holds all the items in the heap.
-				protected List<T> Items = new List<T>();
+				protected List<T> Items;
 
 				// removes the need to instantiate with an IComparer
 				// if the default will suffice.
@@ -57,6 +57,7 @@ namespace DSM {
 				// contructs an instance with the appropriate IComparer
 				public BinaryHeap (IComparer<T> comparer) {
 					Comparer = comparer;
+					Items = new List<T>();
 				}
 
 				public virtual void Insert (T newItem) {
@@ -136,6 +137,13 @@ namespace DSM {
 						throw new InvalidOperationException("The heap is empty.");
 					}
 					return Items[0];
+				}
+
+				public T Back () {
+					if (Items.Count == 0) {
+						throw new InvalidOperationException("The heap is empty.");
+					}
+					return Items[Count - 1];
 				}
 
 				public void TrimExcess () {
