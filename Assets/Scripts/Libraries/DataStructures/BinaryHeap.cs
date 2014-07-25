@@ -46,9 +46,9 @@ namespace DSM {
 			using System.Collections.Generic;
 			public class BinaryHeap<T> : IEnumerable<T> {
 
-				private IComparer<T> Comparer;
+				protected IComparer<T> Comparer;
 				// Holds all the items in the heap.
-				private List<T> Items = new List<T>();
+				protected List<T> Items = new List<T>();
 
 				// removes the need to instantiate with an IComparer
 				// if the default will suffice.
@@ -59,7 +59,7 @@ namespace DSM {
 					Comparer = comparer;
 				}
 
-				public void Insert (T newItem) {
+				public virtual void Insert (T newItem) {
 
 					int i = Count;
 
@@ -78,7 +78,7 @@ namespace DSM {
 					Items[i] = newItem;
 				}
 
-				public T RemoveRoot () {
+				public virtual T RemoveRoot () {
 					// Throw an exception if the heap is empty.
 					if (Items.Count == 0) {
 						throw new InvalidOperationException("The heap is empty.");
@@ -142,7 +142,7 @@ namespace DSM {
 					Items.TrimExcess();
 				}
 
-				public IEnumerator GetEnumerator () {
+				public virtual IEnumerator GetEnumerator () {
 					return GetEnumerator();
 				}
 

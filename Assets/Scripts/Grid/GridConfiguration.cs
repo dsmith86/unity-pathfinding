@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using DSM.DataStructures.Generics;
 
 // The different types of supported explorers
 	public enum ExplorerType {
