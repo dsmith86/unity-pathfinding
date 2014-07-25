@@ -45,8 +45,10 @@ public class BreadthFirstExplorer : Explorer {
 		ConstructPath(sourceCell);
 		// Send an event notification that the path has been constructed.
 		NotifyPathFinished();
-		// Send an event notification that the path can be traced.
-		NotifyPathShouldBeTraced();
+		if (!stepNavigation) {
+			// Send an event notification that the path can be traced.
+			NotifyPathShouldBeTraced();	
+		}
 	}
 
 	void LookForTarget () {

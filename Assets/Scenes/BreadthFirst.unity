@@ -114,7 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1237551232}
   earlyExit: 1
-  stepNavigation: 0
+  stepNavigation: 1
   explorerType: 0
 --- !u!1 &1237551227
 GameObject:
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d4265b8cd4e4a5388de9d026727acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraSmoothing: 50
+  cameraSmoothing: 30
 --- !u!1 &1371898989
 GameObject:
   m_ObjectHideFlags: 0
