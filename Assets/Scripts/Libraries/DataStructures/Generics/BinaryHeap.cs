@@ -139,13 +139,6 @@ namespace DSM {
 					return Items[0];
 				}
 
-				public T Back () {
-					if (Items.Count == 0) {
-						throw new InvalidOperationException("The heap is empty.");
-					}
-					return Items[Count - 1];
-				}
-
 				public void TrimExcess () {
 					Items.TrimExcess();
 				}
