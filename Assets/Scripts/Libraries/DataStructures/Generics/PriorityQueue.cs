@@ -46,6 +46,7 @@ namespace DSM {
 
 			using System.Collections;
 			using System.Collections.Generic;
+			using System.Linq;
 			using DSM.DataStructures.Generics;
 			public class PriorityQueue<TValue, TPriority> : IEnumerable<TValue> {
 
@@ -53,7 +54,7 @@ namespace DSM {
 				// Holds all the items in the queue.
 				private BinaryHeap<TPriority> Items;
 				// Maps keys to their respective priorities.
-				protected Dictionary<TPriority, TValue> KeyMap;
+				private Dictionary<TValue, TPriority> PriorityMap;
 
 				// removes the need to instantiate with an IComparer
 				// if the default will suffice.
@@ -63,30 +64,31 @@ namespace DSM {
 				public PriorityQueue (IComparer<TPriority> comparer) {
 					Comparer = comparer;
 					Items = new BinaryHeap<TPriority>(Comparer);
-					KeyMap = new Dictionary<TPriority, TValue>();
+					PriorityMap = new Dictionary<TValue, TPriority>();
 				}
 
-				public void Push (TValue newValue, TPriority priority) {
+				public virtual void Push (TValue newValue, TPriority priority) {
 					// Add the priority to the heap.
 					Items.Insert(priority);
+					// Initialize the queue for a given priority
 					// Map the priority to its key.
-					KeyMap.Add(priority, newValue);
+					PriorityMap.Add(newValue, priority);
 				}
 
-				public TValue Pop () {
+				public virtual TValue Pop () {
 					// Remove the item from the binary heap.
 					TPriority priority = Items.RemoveRoot();
-					// Get the key using the KeyMap dictionary.
-					TValue key = KeyMap[priority];
+					// Get the first key that matches using the PriorityMap dictionary.
+					TValue key = PriorityMap.FirstOrDefault(x => Comparer.Compare(x.Value, priority) == 0).Key;
 					// Remove the mapped key from the dictionary.
-					KeyMap.Remove(priority);
+					PriorityMap.Remove(key);
 					// Return the key.
 					return key;
 				}
 
 				public void Clear () {
 					Items.Clear();
-					KeyMap.Clear();
+					PriorityMap.Clear();
 				}
 
 				public void TrimExcess () {
